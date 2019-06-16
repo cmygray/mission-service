@@ -1,6 +1,7 @@
 import json
 from django.core.serializers import serialize
 from django.http import HttpResponse
+from django.utils.dateparse import parse_datetime
 
 from polls.models import Poll
 
@@ -15,7 +16,7 @@ def index(request):
     if request.method == 'POST':
         poll = Poll(
             poll_title=request.POST.get('poll_title'),
-            ends_at=request.POST.get('ends_at'),
+            ends_at=parse_datetime(request.POST.get('ends_at')),
         )
         poll.save()
         return HttpResponse(
