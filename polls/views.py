@@ -12,6 +12,17 @@ def index(request):
             content_type='application/json',
         )
 
+    if request.method == 'POST':
+        poll = Poll(
+            poll_title=request.POST.get('poll_title'),
+            ends_at=request.POST.get('ends_at'),
+        )
+        poll.save()
+        return HttpResponse(
+            json.loads(serialize('json', [poll])),
+            content_type='application/json',
+        )
+
 
 def detail(request, poll_id):
     poll = Poll.objects.get(pk=poll_id)
