@@ -28,6 +28,10 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
+CORS_ORIGIN_WHITELIST = [
+    'http://localhost:8080',
+    'https://polls.cmygray.kr',
+]
 
 # Application definition
 
