@@ -1,9 +1,8 @@
 import json
 from django.core.serializers import serialize
 from django.http import HttpResponse
-from django.utils.dateparse import parse_datetime
 
-from polls.models import Poll
+from polls.models import Poll, Choice
 
 
 def index(request):
@@ -16,9 +15,13 @@ def index(request):
     if request.method == 'POST':
         poll = Poll(
             poll_title=request.POST.get('poll_title'),
-            ends_at=parse_datetime(request.POST.get('ends_at')),
         )
         poll.save()
+        Choice.objects.bulk_create([
+            Choice(poll_id=poll.pk),
+            Choice(poll_id=poll.pk),
+            Choice(poll_id=poll.pk)
+        ])
         return HttpResponse(
             json.loads(serialize('json', [poll])),
             content_type='application/json',
@@ -31,5 +34,13 @@ def detail(request, poll_id):
     if request.method == 'GET':
         return HttpResponse(
             json.loads(serialize('json', [poll])),
+            content_type='application/json',
+        )
+
+
+def choices(request, poll_id):
+    if request.method == 'GET':
+        return HttpResponse(
+            serialize('json', Poll.objects.get(pk=poll_id).choices.all()),
             content_type='application/json',
         )
