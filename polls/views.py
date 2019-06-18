@@ -8,7 +8,7 @@ from polls.models import Poll, Choice
 def index(request):
     if request.method == 'GET':
         return HttpResponse(
-            serialize('json', Poll.objects.all()),
+            serialize('json', Poll.objects.exclude(starts_at=None)),
             content_type='application/json',
         )
 
