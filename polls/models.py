@@ -9,6 +9,6 @@ class Poll(models.Model):
 
 
 class Choice(models.Model):
-    poll = models.ForeignKey(Poll, on_delete=models.CASCADE, related_name='choices')
+    poll_id = models.ForeignKey(Poll, on_delete=models.CASCADE, related_name='choices')
     choice_text = models.CharField(blank=True, max_length=200, default='항목을 입력하세요')
     votes_count = models.IntegerField(default=0)

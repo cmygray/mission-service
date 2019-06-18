@@ -19,9 +19,9 @@ def index(request):
         )
         poll.save()
         Choice.objects.bulk_create([
-            Choice(poll_id=poll.pk),
-            Choice(poll_id=poll.pk),
-            Choice(poll_id=poll.pk)
+            Choice(poll_id=poll),
+            Choice(poll_id=poll),
+            Choice(poll_id=poll)
         ])
         return HttpResponse(
             # TODO: ... consider using DRF
