@@ -13,8 +13,9 @@ def index(request):
         )
 
     if request.method == 'POST':
+        body = json.loads(request.body)
         poll = Poll(
-            poll_title=request.POST.get('poll_title'),
+            poll_title=body['poll_title']
         )
         poll.save()
         Choice.objects.bulk_create([
@@ -23,7 +24,8 @@ def index(request):
             Choice(poll_id=poll.pk)
         ])
         return HttpResponse(
-            json.loads(serialize('json', [poll])),
+            # TODO: ... consider using DRF
+            serialize('json', [poll])[1:-1],
             content_type='application/json',
         )
 
@@ -33,7 +35,7 @@ def detail(request, poll_id):
 
     if request.method == 'GET':
         return HttpResponse(
-            json.loads(serialize('json', [poll])),
+            serialize('json', [poll])[1:-1],
             content_type='application/json',
         )
 
