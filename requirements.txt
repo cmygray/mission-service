@@ -1,6 +1,9 @@
 Django==2.2.2
 django-cors-headers==3.0.2
+djangorestframework==3.9.4
+future==0.17.1
 postgres==2.2.2
 psycopg2-binary==2.8.3
 pytz==2019.1
+serializers==0.2.4
 sqlparse==0.3.0
