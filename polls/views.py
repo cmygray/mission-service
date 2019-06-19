@@ -1,16 +1,18 @@
 import json
-from django.core.serializers import serialize
-from django.http import HttpResponse
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
 
 from polls.models import Poll, Choice
+from polls.serializers import PollSerializer
 
 
+@api_view(['GET', 'POST'])
 def index(request):
     if request.method == 'GET':
-        return HttpResponse(
-            serialize('json', Poll.objects.exclude(starts_at=None)),
-            content_type='application/json',
-        )
+        polls = Poll.objects.exclude(starts_at=None)
+        serializer = PollSerializer(polls, many=True)
+
+        return Response(serializer.data)
 
     if request.method == 'POST':
         body = json.loads(request.body)
@@ -23,26 +25,16 @@ def index(request):
             Choice(poll_id=poll),
             Choice(poll_id=poll)
         ])
-        return HttpResponse(
-            # TODO: ... consider using DRF
-            serialize('json', [poll])[1:-1],
-            content_type='application/json',
-        )
+
+        serializer = PollSerializer(poll)
+
+        return Response(serializer.data)
 
 
+@api_view(['GET'])
 def detail(request, poll_id):
     poll = Poll.objects.get(pk=poll_id)
 
     if request.method == 'GET':
-        return HttpResponse(
-            serialize('json', [poll])[1:-1],
-            content_type='application/json',
-        )
-
-
-def choices(request, poll_id):
-    if request.method == 'GET':
-        return HttpResponse(
-            serialize('json', Poll.objects.get(pk=poll_id).choices.all()),
-            content_type='application/json',
-        )
+        serializer = PollSerializer(poll)
+        return Response(serializer.data)
