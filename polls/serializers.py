@@ -29,5 +29,7 @@ class PollSerializer(serializers.ModelSerializer):
             choice.save()
 
         instance.poll_title = validated_data.get('poll_title', instance.poll_title)
+        instance.starts_at = validated_data.get('starts_at', instance.starts_at)
+        instance.ends_at = validated_data.get('ends_at', instance.ends_at)
         instance.save()
         return instance
