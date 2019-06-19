@@ -18,3 +18,16 @@ class PollSerializer(serializers.ModelSerializer):
         model = Poll
         fields = '__all__'
         depth = 1
+
+    def update(self, instance, validated_data):
+        choices_data = validated_data.pop('choices')
+        choices = instance.choices.all()
+
+        for choice_data in choices_data:
+            choice = choices.get(id=choice_data.get('id'))
+            choice.choice_text = choice_data.get('choice_text', choice.choice_text)
+            choice.save()
+
+        instance.poll_title = validated_data.get('poll_title', instance.poll_title)
+        instance.save()
+        return instance

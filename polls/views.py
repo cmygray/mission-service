@@ -31,10 +31,20 @@ def index(request):
         return Response(serializer.data)
 
 
-@api_view(['GET'])
+@api_view(['GET', 'PATCH'])
 def detail(request, poll_id):
     poll = Poll.objects.get(pk=poll_id)
 
     if request.method == 'GET':
         serializer = PollSerializer(poll)
+        return Response(serializer.data)
+
+    if request.method == 'PATCH':
+        body = json.loads(request.body)
+
+        poll = Poll.objects.get(pk=poll_id)
+
+        serializer = PollSerializer(poll)
+        serializer.update(poll, body)
+
         return Response(serializer.data)
