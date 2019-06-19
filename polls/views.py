@@ -3,7 +3,7 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
 from polls.models import Poll, Choice
-from polls.serializers import PollSerializer
+from polls.serializers import PollSerializer, ChoiceSerializer
 
 
 @api_view(['GET', 'POST'])
@@ -48,3 +48,19 @@ def detail(request, poll_id):
         serializer.update(poll, body)
 
         return Response(serializer.data)
+
+
+@api_view(['POST'])
+def vote(request, poll_id):
+    if request.method == 'POST':
+        body = json.loads(request.body)
+        choice = Choice.objects.get(pk=body['choice_id'])
+
+        choice_serializer = ChoiceSerializer(choice)
+        choice_serializer.increment_votes_count(choice)
+
+        poll = Poll.objects.get(pk=poll_id)
+        poll_serializer = PollSerializer(poll)
+
+        return Response(poll_serializer.data)
+

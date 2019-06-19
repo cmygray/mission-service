@@ -9,6 +9,11 @@ class ChoiceSerializer(serializers.ModelSerializer):
         model = Choice
         fields = '__all__'
 
+    def increment_votes_count(self, instance):
+        instance.votes_count += 1
+        instance.save()
+        return instance
+
 
 class PollSerializer(serializers.ModelSerializer):
     id = serializers.CharField(read_only=True)
